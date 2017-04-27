@@ -1,0 +1,177 @@
+{% extends 'html_report/report/base.html' %}
+
+{% block title %}
+  {{ _('Invoice') }}
+{% endblock %}
+
+{% block main %}
+    {% for invoice in records %}
+      <div class="container-fluid {% if not loop.first %}page-break{% endif %}">
+
+        <div class="row">
+          <div class="col-xs-12">
+            <table class="table no-border">
+              <tr>
+                {% block header %}
+                {% include header %}
+                {% endblock %}
+              </tr>
+              <tr>
+                <td>
+                  <span><strong>{% if invoice.type == 'in' %}{{ _('Supplier Invoice') }}{% else %}{{ _('Invoice') }}{% endif %}#</strong> {{ invoice.number or '' }}</span><br />
+                  <span><strong>{{ _('Date') }}:</strong> {{ (invoice.invoice_date or datetime.date.today())|dateformat(format='short') }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td style="border-left: 1px solid #ddd">
+                  <strong>{% if invoice.type == 'in' %}{{ _('Supplier') }}{% else %}{{ _('Customer') }}{% endif %}</strong>
+                </td>
+              </tr>
+              <tr style="border-bottom: 1px solid #ddd">
+                <td></td>
+                <td style="border-left: 1px solid #ddd">
+                  {% if invoice.invoice_address %}
+                    {% for line in invoice.invoice_address.full_address.split('\n') %}
+                      {{ line }}<br/>
+                    {% endfor %}
+                    {% if invoice.party.phone %}
+                      <br/>{{ _('Phone') }}: {{ invoice.party.phone }}
+                    {% endif %}
+                    {% if invoice.party.fax %}
+                      <br/>{{ _('Fax') }}: {{ invoice.party.fax }}
+                    {% endif %}
+                    {% if invoice.party.email %}
+                      <br/>{{ _('Email') }}: {{ invoice.party.email }}
+                    {% endif %}
+                  {% endif %}
+                </td>
+              </tr>
+            </table>
+            <table class="table borderless bottom2px top2px">
+              <thead>
+                <th nowrap>{{ _('Product') }}</th>
+                <th nowrap>{{ _('Code') }}</th>
+                <th class="text-right" nowrap>{{ _('Qty') }}</th>
+                <th class="text-right" nowrap>{{ _('Unit Price') }}</th>
+                <th class="text-right" nowrap>{{ _('Amount') }}</th>
+              </thead>
+              <tbody>
+                {% for line in invoice.lines %}
+                  <tr>
+                    <td>{{ line.product and line.product.name or line.description }}</td>
+                    <td>{{ line.product and line.product.code or '-' }}</td>
+                    <td class="text-right">{{ format_number(line.quantity, invoice.party.lang, digits=line.unit_digits) }}</td>
+                    <td class="text-right">{{ line.unit_price|currencyformat(invoice.currency.code) }}</td>
+                    <td class="text-right">{{ line.amount|currencyformat(invoice.currency.code)   }}</td>
+                  </tr>
+                {% endfor %}
+                <tr class="b-hide">
+                  <td colspan="5"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-xs-12">
+            <table class="table no-border">
+              <thead>
+                <th><strong>{{ _('Due Dates') }}:</strong></th>
+                <th><strong>{{ _('Taxes') }}:</strong></th>
+              </thead>
+              <tbody>
+                <tr>
+                <td>
+                  <table class="table borderless bottom2px">
+                    <tbody>
+                      {% for maturity_date in invoice.lines_to_pay %}
+                        <tr>
+                          <td class="maturity_date-date">
+                            {{ maturity_date.date|dateformat(format='short') }}
+                          </td>
+                          <td class="text-right base-tax-padding">
+                            {{ maturity_date.debit|currencyformat(invoice.currency.code) }}
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </td>
+                <td>
+                  <table class="table borderless bottom2px">
+                    <tbody>
+                      {% for tax in invoice.taxes %}
+                        <tr>
+                          <td class="base-tax-padding">
+                            {{ "Base %s" % (tax.tax.rate * 100)|round|int|string + '%' }}
+                          </td>
+                          <td class="text-right base-tax-padding">
+                            {{ tax.base|currencyformat(invoice.currency.code) }}
+                          </td>
+                          <td class="text-right base-tax-padding">
+                            {{ tax.amount|currencyformat(invoice.currency.code) }}
+                          </td>
+                          <td class="text-right base-tax-padding">
+                            {{ (tax.base + tax.amount)|currencyformat(invoice.currency.code) }}
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </td>
+                </tr>
+              <tbody>
+            </table>
+          </div>
+
+          <div class="col-xs-6 col-xs-offset-6">
+            <table class="table borderless bottom2px">
+              <tr>
+                <td class="text-right" style="width:100%;">
+                  {{ _('Untaxed') }}:
+                </td>
+                <td class="text-right">
+                  {{ invoice.untaxed_amount|currencyformat(invoice.currency.code) }}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-right" style="width:100%;">
+                  {{ _('Tax') }}:
+                </td>
+                <td class="text-right">
+                  {{ invoice.tax_amount|currencyformat(invoice.currency.code) }}
+                </td>
+              </tr>
+              <tr class="font-bold">
+                <td class="text-right text12" style="width:100%;">
+                  {{ _('Total') }}:
+                </td>
+                <td class="text-right text12">
+                  {{ invoice.total_amount|currencyformat(invoice.currency.code) }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div id="footer" class="row">
+          <div class="col-xs-12">
+            {% set company_party = user.company.party %}
+            {% for line in company_party.addresses[0].full_address.split('\n') %}
+              {{ line }}<br/>
+            {% endfor %}
+            {% if company_party.phone %}
+              <br/>{{ _('Phone') }}: {{ company_party.phone }}
+            {% endif %}
+            {% if company_party.fax %}
+              <br/>{{ _('Fax') }}: {{ company_party.fax }}
+            {% endif %}
+            {% if company_party.email %}
+              <br/>{{ _('Email') }}: {{ company_party.email }}
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    {% endfor %}
+{% endblock %}

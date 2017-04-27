@@ -1,0 +1,91 @@
+# Translations template for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-04-27 10:33+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.4.0\n"
+
+#: invoice.html:4 invoice.html:20
+msgid "Invoice"
+msgstr ""
+
+#: invoice.html:20
+msgid "Supplier Invoice"
+msgstr ""
+
+#: invoice.html:21
+msgid "Date"
+msgstr ""
+
+#: invoice.html:26
+msgid "Supplier"
+msgstr ""
+
+#: invoice.html:26
+msgid "Customer"
+msgstr ""
+
+#: invoice.html:39 invoice.html:55
+msgid "Phone"
+msgstr ""
+
+#: invoice.html:42 invoice.html:58
+msgid "Fax"
+msgstr ""
+
+#: invoice.html:45 invoice.html:61
+msgid "Email"
+msgstr ""
+
+#: invoice.html:68
+msgid "Product"
+msgstr ""
+
+#: invoice.html:69
+msgid "Code"
+msgstr ""
+
+#: invoice.html:70
+msgid "Qty"
+msgstr ""
+
+#: invoice.html:71
+msgid "Unit Price"
+msgstr ""
+
+#: invoice.html:72
+msgid "Amount"
+msgstr ""
+
+#: invoice.html:94
+msgid "Due Dates"
+msgstr ""
+
+#: invoice.html:95
+msgid "Taxes"
+msgstr ""
+
+#: invoice.html:146
+msgid "Untaxed"
+msgstr ""
+
+#: invoice.html:154
+msgid "Tax"
+msgstr ""
+
+#: invoice.html:162
+msgid "Total"
+msgstr ""
+

@@ -1,0 +1,95 @@
+# Catalan translations for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-04-27 10:33+0200\n"
+"PO-Revision-Date: 2017-04-27 10:34+0100\n"
+"Last-Translator: Raimon Esteve <resteve@zikzakmedia.com>\n"
+"Language: ca\n"
+"Language-Team: ca <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.4.0\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: invoice.html:4 invoice.html:20
+msgid "Invoice"
+msgstr "Factura"
+
+#: invoice.html:20
+msgid "Supplier Invoice"
+msgstr "Factura proveïdor"
+
+#: invoice.html:21
+msgid "Date"
+msgstr "Data"
+
+#: invoice.html:26
+msgid "Supplier"
+msgstr "Proveïdor"
+
+#: invoice.html:26
+msgid "Customer"
+msgstr "Client"
+
+#: invoice.html:39 invoice.html:55
+msgid "Phone"
+msgstr "Telèfon"
+
+#: invoice.html:42 invoice.html:58
+msgid "Fax"
+msgstr "Fax"
+
+#: invoice.html:45 invoice.html:61
+msgid "Email"
+msgstr "Email"
+
+#: invoice.html:68
+msgid "Product"
+msgstr "Producte"
+
+#: invoice.html:69
+msgid "Code"
+msgstr "Codi"
+
+#: invoice.html:70
+msgid "Qty"
+msgstr "Qt."
+
+#: invoice.html:71
+msgid "Unit Price"
+msgstr "Preu"
+
+#: invoice.html:72
+msgid "Amount"
+msgstr "Total"
+
+#: invoice.html:94
+msgid "Due Dates"
+msgstr "Venciments"
+
+#: invoice.html:95
+msgid "Taxes"
+msgstr "Impostos"
+
+#: invoice.html:146
+msgid "Untaxed"
+msgstr "Base"
+
+#: invoice.html:154
+msgid "Tax"
+msgstr "Impost"
+
+#: invoice.html:162
+msgid "Total"
+msgstr "Total"
+
+#~ msgid "Date 2"
+#~ msgstr "Una data"
