@@ -7,42 +7,41 @@
 {% block main %}
     {% for invoice in records %}
       <div class="container-fluid {% if not loop.first %}page-break{% endif %}">
-
+        <div class="row">
+          <div class="col-xs-12">
+            {{ company.render.header }}
+          </div>
+        </div>
         <div class="row">
           <div class="col-xs-12">
             <table class="table no-border">
               <tr>
-                {% block header %}
-                {% include header %}
-                {% endblock %}
-              </tr>
-              <tr>
                 <td>
-                  <span><strong>{% if invoice.type == 'in' %}{{ _('Supplier Invoice') }}{% else %}{{ _('Invoice') }}{% endif %}#</strong> {{ invoice.number or '' }}</span><br />
-                  <span><strong>{{ _('Date') }}:</strong> {{ (invoice.invoice_date or datetime.date.today())|dateformat(format='short') }}</span>
+                  <span><strong>{% if invoice.raw.type == 'in' %}{{ _('Supplier Invoice') }}{% else %}{{ _('Invoice') }}{% endif %}#</strong> {{ invoice.render.number or '' }}</span><br />
+                  <span><strong>{{ _('Date') }}:</strong> {{ invoice.render.invoice_date or '' }}</span>
                 </td>
               </tr>
               <tr>
                 <td></td>
                 <td style="border-left: 1px solid #ddd">
-                  <strong>{% if invoice.type == 'in' %}{{ _('Supplier') }}{% else %}{{ _('Customer') }}{% endif %}</strong>
+                  <strong>{% if invoice.raw.type == 'in' %}{{ _('Supplier') }}{% else %}{{ _('Customer') }}{% endif %}</strong>
                 </td>
               </tr>
               <tr style="border-bottom: 1px solid #ddd">
                 <td></td>
                 <td style="border-left: 1px solid #ddd">
                   {% if invoice.invoice_address %}
-                    {% for line in invoice.invoice_address.full_address.split('\n') %}
+                    {% for line in invoice.invoice_address.raw.full_address.split('\n') %}
                       {{ line }}<br/>
                     {% endfor %}
-                    {% if invoice.party.phone %}
-                      <br/>{{ _('Phone') }}: {{ invoice.party.phone }}
+                    {% if invoice.party.raw.phone %}
+                      <br/>{{ _('Phone') }}: {{ invoice.party.render.phone }}
                     {% endif %}
-                    {% if invoice.party.fax %}
-                      <br/>{{ _('Fax') }}: {{ invoice.party.fax }}
+                    {% if invoice.party.raw.fax %}
+                      <br/>{{ _('Fax') }}: {{ invoice.party.render.fax }}
                     {% endif %}
-                    {% if invoice.party.email %}
-                      <br/>{{ _('Email') }}: {{ invoice.party.email }}
+                    {% if invoice.party.raw.email %}
+                      <br/>{{ _('Email') }}: {{ invoice.party.render.email }}
                     {% endif %}
                   {% endif %}
                 </td>
@@ -59,11 +58,11 @@
               <tbody>
                 {% for line in invoice.lines %}
                   <tr>
-                    <td>{{ line.product and line.product.name or line.description }}</td>
-                    <td>{{ line.product and line.product.code or '-' }}</td>
-                    <td class="text-right">{{ format_number(line.quantity, invoice.party.lang, digits=line.unit_digits) }}</td>
-                    <td class="text-right">{{ line.unit_price|currencyformat(invoice.currency.code) }}</td>
-                    <td class="text-right">{{ line.amount|currencyformat(invoice.currency.code)   }}</td>
+                    <td>{{ line.product and line.product.render.name or line.render.description }}</td>
+                    <td>{{ line.product and line.product.render.code or '-' }}</td>
+                    <td class="text-right">{{ line.render.quantity }}</td>
+                    <td class="text-right">{{ line.render.unit_price }}</td>
+                    <td class="text-right">{{ line.render.amount }}</td>
                   </tr>
                 {% endfor %}
                 <tr class="b-hide">
@@ -87,10 +86,10 @@
                       {% for maturity_date in invoice.lines_to_pay %}
                         <tr>
                           <td class="maturity_date-date">
-                            {{ maturity_date.date|dateformat(format='short') }}
+                            {{ maturity_date.render.date }}
                           </td>
                           <td class="text-right base-tax-padding">
-                            {{ maturity_date.debit|currencyformat(invoice.currency.code) }}
+                            {{ maturity_date.render.debit }}
                           </td>
                         </tr>
                       {% endfor %}
@@ -103,16 +102,16 @@
                       {% for tax in invoice.taxes %}
                         <tr>
                           <td class="base-tax-padding">
-                            {{ "Base %s" % (tax.tax.rate * 100)|round|int|string + '%' }}
+                            {{ "Base %s" % (tax.tax.render.rate * 100)|round|int|string + '%' }}
                           </td>
                           <td class="text-right base-tax-padding">
-                            {{ tax.base|currencyformat(invoice.currency.code) }}
+                            {{ tax.render.base }}
                           </td>
                           <td class="text-right base-tax-padding">
-                            {{ tax.amount|currencyformat(invoice.currency.code) }}
+                            {{ tax.render.amount }}
                           </td>
                           <td class="text-right base-tax-padding">
-                            {{ (tax.base + tax.amount)|currencyformat(invoice.currency.code) }}
+                            {{ (tax.render.base + tax.render.amount) }}
                           </td>
                         </tr>
                       {% endfor %}
@@ -131,7 +130,7 @@
                   {{ _('Untaxed') }}:
                 </td>
                 <td class="text-right">
-                  {{ invoice.untaxed_amount|currencyformat(invoice.currency.code) }}
+                  {{ invoice.render.untaxed_amount }}
                 </td>
               </tr>
               <tr>
@@ -139,7 +138,7 @@
                   {{ _('Tax') }}:
                 </td>
                 <td class="text-right">
-                  {{ invoice.tax_amount|currencyformat(invoice.currency.code) }}
+                  {{ invoice.render.tax_amount }}
                 </td>
               </tr>
               <tr class="font-bold">
@@ -147,7 +146,7 @@
                   {{ _('Total') }}:
                 </td>
                 <td class="text-right text12">
-                  {{ invoice.total_amount|currencyformat(invoice.currency.code) }}
+                  {{ invoice.render.total_amount }}
                 </td>
               </tr>
             </table>
@@ -156,19 +155,20 @@
 
         <div id="footer" class="row">
           <div class="col-xs-12">
-            {% set company_party = user.company.party %}
-            {% for line in company_party.addresses[0].full_address.split('\n') %}
+            {% set company_party = invoice.company.party %}
+            {% for line in company_party.addresses[0].raw.full_address.split('\n') %}
               {{ line }}<br/>
             {% endfor %}
-            {% if company_party.phone %}
-              <br/>{{ _('Phone') }}: {{ company_party.phone }}
+            {% if company_party.raw.phone %}
+              <br/>{{ _('Phone') }}: {{ company_party.render.phone }}
             {% endif %}
-            {% if company_party.fax %}
-              <br/>{{ _('Fax') }}: {{ company_party.fax }}
+            {% if company_party.raw.fax %}
+              <br/>{{ _('Fax') }}: {{ company_party.render.fax }}
             {% endif %}
-            {% if company_party.email %}
-              <br/>{{ _('Email') }}: {{ company_party.email }}
+            {% if company_party.raw.email %}
+              <br/>{{ _('Email') }}: {{ company_party.render.email }}
             {% endif %}
+            <p>{{ company.render.footer }}</p>
           </div>
         </div>
 

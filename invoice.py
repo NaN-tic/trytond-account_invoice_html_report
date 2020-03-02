@@ -5,15 +5,14 @@ import os
 from trytond.pool import Pool, PoolMeta
 from trytond.config import config
 from trytond.transaction import Transaction
-from trytond.modules.html_report.html_report import HTMLReport
+from trytond.report import Report
 
 __all__ = ['InvoiceReport', 'Invoice']
 
 STORE_REPORT = config.getint('html_report', 'store_report', default=False)
 
 
-class InvoiceReport(HTMLReport):
-    __metaclass__ = PoolMeta
+class InvoiceReport(metaclass=PoolMeta):
     __name__ = 'account.invoice'
 
     @classmethod
@@ -32,8 +31,7 @@ class InvoiceReport(HTMLReport):
             return result
 
 
-class Invoice:
-    __metaclass__ = PoolMeta
+class Invoice(metaclass=PoolMeta):
     __name__ = 'account.invoice'
 
     def print_invoice(self):
