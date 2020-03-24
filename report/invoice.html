@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    {% for invoice in records %}
+    {% for invoice in records %}{% language invoice.party.lang and invoice.party.raw.lang.code or company.party.lang and company.party.raw.lang.code or 'en' %}
       <div class="container-fluid {% if not loop.first %}page-break{% endif %}">
         <div class="row">
           <div class="col-xs-12">
@@ -173,5 +173,5 @@
         </div>
 
       </div>
-    {% endfor %}
+    {% endlanguage %}{% endfor %}
 {% endblock %}
